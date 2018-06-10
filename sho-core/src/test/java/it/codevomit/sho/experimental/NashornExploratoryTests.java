@@ -1,5 +1,6 @@
 package it.codevomit.sho.experimental;
 
+import it.codevomit.sho.demo.TempBean;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -46,10 +47,6 @@ public class NashornExploratoryTests
     {
 
         ScriptEngine engine = (new ScriptEngineManager()).getEngineByName("nashorn");
-
-//        ScriptContext context = new SimpleScriptContext();
-//        context.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
-//        Bindings engineBindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
         engine.put("bean", new SimulatedService());
 
         Object result = engine.eval(SCRIPT_INTERACTION);
@@ -60,37 +57,6 @@ public class NashornExploratoryTests
         TempBean tempBean = (TempBean)result;
         assertEquals("Gonfio Man", tempBean.getName());
         assertEquals(88.6, tempBean.getValue(), 0.0001);
-    }
-
-    public static class TempBean
-    {
-        String name;
-        Double value;
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public void setName(String name)
-        {
-            this.name = name;
-        }
-
-        public Double getValue()
-        {
-            return value;
-        }
-
-        public void setValue(Double value)
-        {
-            this.value = value;
-        }
-
-        public void DoNothing()
-        {
-            log.info("TEST");
-        }
     }
 
     public static class SimulatedService

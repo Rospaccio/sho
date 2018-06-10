@@ -25,6 +25,7 @@
 
     <modules>
         <module>sho-core</module>
+        <module>sho-services</module>
     </modules>
 
     <dependencies>
