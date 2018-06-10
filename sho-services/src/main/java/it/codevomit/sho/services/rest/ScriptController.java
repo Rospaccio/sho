@@ -1,5 +1,8 @@
 package it.codevomit.sho.services.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import it.codevomit.sho.ShoCoreAutoConfiguration;
 import it.codevomit.sho.host.ScriptEngineHost;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +39,16 @@ public class ScriptController
 
     @PostMapping(path = "/eval")
     public ResponseEntity<Object> eval(
-        @RequestBody String scriptText){
+        @RequestBody String scriptText) throws JsonProcessingException{
         
         Object evaluationResult = scriptEngineHost.eval(scriptText);
         
-        return ResponseEntity.ok().body(evaluationResult);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        String superSerial = mapper.writeValueAsString(evaluationResult);
+        
+        return ResponseEntity.ok().body(superSerial);
     }
 
 }
