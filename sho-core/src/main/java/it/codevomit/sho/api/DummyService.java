@@ -7,4 +7,6 @@ package it.codevomit.sho.api;
 public interface DummyService
 {
     String getRandomString();
+
+    void doSomeSideEffects();
 }

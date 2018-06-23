@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Sho Web Home Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+        <script type="text/javascript">
+            function submitExecution() {
+                try {
+                    var form = document.forms['scriptForm'];
+                    var text = editor.getValue();
+                    console.log("form: ", form);
+                    document.getElementById("scriptText").value = text;
+                    form.submit();
+                } catch (e) {
+                    console.log("Error: ", e);
+                }
+            }
+        </script>
+
+
+    </head>
+    <body>
+        <div>Hello there!</div>
+
+        <form id="scriptForm" name="scriptForm" th:action="@{/sho/execute}" method="post" >
+            <div id="container" style="height:300px;border:1px solid grey"></div>
+            <input type="hidden" value="" id="scriptText" name="scriptText" />
+            <input type="hidden" value="whatever" name="probe" />
+        </form>
+        <button onclick="submitExecution()">Execute on server</button>
+
+        <textarea th:text="${executionResult}">
+        </textarea>
+        
+        <textarea id="diagnosticArea" th:text="${scriptText}">
+        </textarea>
+        
+        <script src="monaco-editor/min/vs/loader.js"></script>
+        <script>
+            console.log("ScriptText: ", document.getElementById('diagnosticArea').value);
+            require.config({paths: {'vs': 'monaco-editor/min/vs'}});
+            require(['vs/editor/editor.main'], function () {
+                editor = monaco.editor.create(document.getElementById('container'), {
+                    value: document.getElementById('diagnosticArea').value,
+                    language: 'javascript'
+                });
+            });
+        </script>
+    </body>
+</html>
