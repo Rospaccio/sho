@@ -1,5 +1,7 @@
 package it.codevomit.sho.web.home;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import it.codevomit.sho.host.ScriptEngineHost;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -61,12 +63,21 @@ public class HomeController
         Object result;
         try {
             result = scriptEngineHost.eval(scriptText);
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            mapper.configure(SerializationFeature.FAIL_ON_SELF_REFERENCES, false);
+            mapper.configure(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS, false);
+
+            String serializedToJSON = mapper.writeValueAsString(result);
+            redirectAttributes.addFlashAttribute("executionResult", serializedToJSON);
         }
         catch (Exception e) {
-            result = e;
+            log.error("Evaluation error:", e);
+            redirectAttributes.addFlashAttribute("executionResult", e);
         }
-        
-        redirectAttributes.addFlashAttribute("executionResult", result);
+
         return new RedirectView("/sho/web");
     }
 }
