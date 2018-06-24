@@ -26,7 +26,7 @@
     <body>
         <div>Hello there!</div>
 
-        <form id="scriptForm" name="scriptForm" th:action="@{/sho/execute}" method="post" >
+        <form id="scriptForm" name="scriptForm" th:action="@{/sho/web/execute}" method="post" >
             <div id="container" style="height:300px;border:1px solid grey"></div>
             <input type="hidden" value="" id="scriptText" name="scriptText" />
             <input type="hidden" value="whatever" name="probe" />
@@ -36,7 +36,7 @@
         <textarea th:text="${executionResult}">
         </textarea>
         
-        <textarea id="diagnosticArea" th:text="${scriptText}">
+        <textarea style="display: none" id="diagnosticArea" th:text="${scriptText}">
         </textarea>
         
         <script src="monaco-editor/min/vs/loader.js"></script>

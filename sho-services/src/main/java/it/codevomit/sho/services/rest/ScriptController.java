@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @ConditionalOnClass(ShoCoreAutoConfiguration.class)
-@RequestMapping("/sho")
+@RequestMapping("/sho/api")
 public class ScriptController
 {
     ScriptEngineHost scriptEngineHost;

@@ -20,10 +20,11 @@ import org.springframework.web.servlet.view.RedirectView;
  * @author merka
  */
 @Controller
-@RequestMapping("/sho")
+@RequestMapping("/sho/web")
 @Slf4j
 public class HomeController
 {
+    public static final String SHO_INDEX = "sho-index";
     public static final String DEFAULT_SCRIPT = "// Here you can do some cool stuff, like:\n"
             + "var service = applicationContext.getBean(\"dummyService\");\n"
             + "service.doSomeSideEffects();\n"
@@ -34,15 +35,16 @@ public class HomeController
     ScriptEngineHost scriptEngineHost;
 
     String currentScript;
-    
+
     @GetMapping(value = {"", "/index", "/home"})
     public String index(
             Model model)
     {
-        if(!model.containsAttribute("scriptText"))
+        if (!model.containsAttribute("scriptText")) {
             model.addAttribute("scriptText", DEFAULT_SCRIPT);
+        }
 
-        return "index";
+        return SHO_INDEX;
     }
 
     @PostMapping("/execute")
@@ -54,12 +56,17 @@ public class HomeController
 
         log.info("Probe = {}", probe);
         log.info("Received script: {}{}", System.lineSeparator(), scriptText);
-
-        Object result = scriptEngineHost.eval(scriptText);
-
-        redirectAttributes.addFlashAttribute("executionResult", result);
         redirectAttributes.addFlashAttribute("scriptText", scriptText);
 
-        return new RedirectView("/sho");
+        Object result;
+        try {
+            result = scriptEngineHost.eval(scriptText);
+        }
+        catch (Exception e) {
+            result = e;
+        }
+        
+        redirectAttributes.addFlashAttribute("executionResult", result);
+        return new RedirectView("/sho/web");
     }
 }
